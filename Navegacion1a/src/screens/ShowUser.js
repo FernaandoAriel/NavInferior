@@ -7,36 +7,38 @@ import {
   ActivityIndicator,
   SafeAreaView,
 } from "react-native";
- 
+
 //componente de la card
 import CardUser from "../components/Users/CardUser";
- 
+
 import useFetchUser from "../hooks/useFetchUser";
 import { useFocusEffect } from "@react-navigation/native";
- 
+import { useTabBar } from "../navigation/scrollAwareNavigator";
+
 const ShowUser = () => {
   const { usuarios, loading, fetchUsuarios } = useFetchUser();
- 
+  const { handleScroll } = useTabBar();
+
   // Se ejecuta cada vez que esta pantalla se enfoca
   useFocusEffect(
     useCallback(() => {
       fetchUsuarios();
     }, [])
   );
- 
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Lista de Usuarios</Text>
       <Text style={styles.subtitle}>
         Consulta los usuarios registrados desde la API
       </Text>
- 
+
       {!loading && (
         <Text style={styles.counterText}>
           Total de usuarios: {usuarios.length}
         </Text>
       )}
- 
+
       {loading ? (
         <ActivityIndicator
           size="large"
@@ -49,12 +51,15 @@ const ShowUser = () => {
           keyExtractor={(user) => user.id.toString()}
           renderItem={({ item }) => <CardUser user={item} />}
           contentContainerStyle={styles.listContainer}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          showsVerticalScrollIndicator={false}
         />
       )}
     </SafeAreaView>
   );
 };
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -63,7 +68,7 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   listContainer: {
-    paddingBottom: 30,
+    paddingBottom: 120, // Espacio adicional para el tab bar
   },
   title: {
     fontSize: 26,
@@ -108,5 +113,5 @@ const styles = StyleSheet.create({
     color: "#3B2C24",
   },
 });
- 
+
 export default ShowUser;

@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Alert, Image } from "react-native";
 import Buttons from "../components/Buttons";
+import { useTabBar } from "../navigation/scrollAwareNavigator";
+
  
 export default function Home({ navigation }) {
+
+  const { handleScroll } = useTabBar();
+
   const irShowUsers = () => {
     navigation.navigate("ShowUser");
   };
  
   return (
-    <View style={styles.container}>
+    <View onScroll={handleScroll} scrollEventThrottle={16} style={styles.container}>
       <Image source={require("../../assets/users.png")} style={styles.image} />
       <Text style={styles.title}>Bienvenido</Text>
       <Text style={styles.subtitle}>
